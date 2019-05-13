@@ -93,7 +93,19 @@ public class Chap2_Echo : MonoBehaviour {
 
 	public void Update()
 	{
-		text.text = recvStr;
+		if(socket == null)
+		{
+			return;
+		}
+
+		if(socket.Poll(0,SelectMode.SelectRead))
+		{
+			byte[] readBuff = new byte[1024];
+			int count = socket.Receive(readBuff);
+			string recvStr = System.Text.Encoding.Default.GetString(readBuff,0,count);
+			text.text = recvStr;
+		}
+		//text.text = recvStr;
 	}
 
 }
