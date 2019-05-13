@@ -86,9 +86,15 @@ namespace EchoSeverChap2
                 return false;
             }
             // 广播
-            string sendStr = System.Text.Encoding.Default.GetString(state.readBuff, 0, count);
+            string recvStr = System.Text.Encoding.Default.GetString(state.readBuff, 0, count);
             Console.WriteLine("Receive" + recvStr);
-            string sendBytes = System.Text.Encoding.Default.GetBytes(sendStr);
+            string sendStr = clientfd.RemoteEndPoint.ToString() + ":" + recvStr;
+            byte[] sendBytes = System.Text.Encoding.Default.GetBytes(sendStr);
+            foreach(ClientState cs in clients.Values)
+            {
+                cs.socket.Send(sendBytes);
+            }
+            return true;
         }
 
         // Accept回调
